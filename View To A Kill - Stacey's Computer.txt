@@ -9,11 +9,14 @@
 35      SX = 279                                : REM The width of the screen in points
 40      SY = 191                                : REM The height of the screen in points    
 
-41 REM  Load the font shape table from the floppy. The font used is ']SMALL STANDARD' from the Beagle Bros. Apple Mechanic.     
-42      SH = 25000 : D$ = CHR$ (4)              : REM SH = Start position in memory
-43      PRINT D$;"BLOAD STANDARD FONT,A";SH     : REM Load the font shape table into memory
-44      POKE 232,SH - INT (SH / 256) * 256      : REM Set the flags for the start of the shape table in memory   
-45      POKE 233, INT (SH / 256)                : REM Set the flags for the end of the shape table in memory  
+41 REM  Load the map image to HGR page 2
+42      PRINT CHR$(4)"BLOADTEST.PIC,A$4000"     : REM Load map to HGR page 2 ($A2000 loads to page 1)
+
+44 REM  Load the font shape table from the floppy. The font used is ']SMALL STANDARD' from the Beagle Bros. Apple Mechanic.     
+45      SH = 25000 : D$ = CHR$ (4)              : REM SH = Start position in memory
+46      PRINT D$;"BLOAD STANDARD FONT,A";SH     : REM Load the font shape table into memory
+47      POKE 232,SH - INT (SH / 256) * 256      : REM Set the flags for the start of the shape table in memory   
+48      POKE 233, INT (SH / 256)                : REM Set the flags for the end of the shape table in memory  
 
 50  REM Graph Setup
 55      DIM PMID(2)                             : REM An array to store the position of the line for each plot
@@ -71,7 +74,9 @@
 700 REM Transition to the map page
 701 REM This should be drawn beforehand on HGR Screen 2 so it can be switched to instantly as in the movie - loaded from a .pic with baked in text.
 702 REM Circles should be shape table animations
-710 GOTO 700
+705     POKE 49237,0                            : REM Display graphics page 2
+706 REM
+710 GOTO 706
 
 1000 REM Data for plot line 1 - a series of x,y positions
 1001    DATA    30,0,  35,2,   40,0,   45,-2,  55,0,   56,-25, 58,25,  59,-20
