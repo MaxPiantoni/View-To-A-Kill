@@ -74,9 +74,12 @@
 700 REM Transition to the map page
 701 REM This should be drawn beforehand on HGR Screen 2 so it can be switched to instantly as in the movie - loaded from a .pic with baked in text.
 702 REM Circles should be shape table animations
-705     POKE 49237,0                            : REM Display graphics page 2
-706 REM
-710 GOTO 706
+705     GET KB$                                 : REM Wait for user to press a key on the keyboard
+710     CALL -3086                              : REM Clear screen to black as in movie    
+715     POKE 49237,0                            : REM Display graphics page 2
+
+750 REM Map screen animations
+755     GOTO 750
 
 1000 REM Data for plot line 1 - a series of x,y positions
 1001    DATA    30,0,  35,2,   40,0,   45,-2,  55,0,   56,-25, 58,25,  59,-20
