@@ -1,0 +1,32 @@
+10 HGR2 
+25 HCOLOR = 3
+30 SH = 25000 : D$ = CHR$ (4)
+35 F$ = "SQUARE.SHAPES"                             : REM Shapes filename
+40 PRINT D$;"BLOAD";F$;",A";SH                      : REM Load the shape table into memory
+45 POKE 232,SH - INT (SH / 256) * 256               : REM Set the flags for the start of the shape table in memory   
+50 POKE 233, INT (SH / 256)                         : REM Set the flags for the end of the shape table in memory   
+55 SX = 279 : SY = 191                              : REM The screen dimensions
+
+60 REM  Draw Cross 
+65      HPLOT 0,96 TO SX,96
+70      HPLOT 140,0 TO 140,SY   
+
+80  REM Draw and animate shapes
+85  FOR U = 0 TO 10000 STEP 1                       : REM Loop circle animations for a while
+90       SC = 3                                     : REM Initial scale   
+100      FOR C = 1 TO 3 STEP 1                      : REM Loop for drawing the 3 different circles
+102         FOR F = 0 TO 5 STEP 1                   : REM Loop for flashing each circle a number of times         
+103            RT = 0                               : REM Initial Rotation  
+105             SCALE = SC: ROT = RT                : REM Shape table drawing setup
+110             XDRAW 3 AT 140,78                   : REM Draw first quadrant at x,y co-ords
+115                 FOR I = 1 TO 3 STEP 1           : REM Loop for drawing other three quadrants    
+120                     RT = RT + 16                : REM Add 90 degrees to cumulative rotation
+125                     ROT = RT                    : REM Rotate the shape by 90 degrees
+130                     XDRAW 3                         
+140                 NEXT I
+150         FOR D = 0 TO 25 STEP 1 : NEXT D         : REM Delay for animation
+152         NEXT F
+155     SC = SC - 1
+160     NEXT C
+170     FOR D = 0 TO 50 STEP 1 : NEXT D             : REM Delay for animation
+190 NEXT U                                          : REM Loop animation
