@@ -1,12 +1,14 @@
 01 REM STACEY'S COMPUTER FROM A VIEW TO A KILL
 02 REM BY MAX PIANTONI
 
+05  PRINT CHR$(4); "BLOAD DHGR"               : REM load Beagle Bros DHGR into memory
+
 10  REM Screen Setup
 15      HOME
-20      HGR                                     : REM Hi-Res Graphics
+20      & HGR2                                     : REM Hi-Res Graphics
 25      POKE 49234,0                            : REM switch to full screen graphics (hide text window)
-30      HCOLOR = 3                              : REM Set the color we will draw in
-35      SX = 279                                : REM The width of the screen in points
+30      & HCOLOR = 15                              : REM Set the color we will draw in
+35      SX = 559                                : REM The width of the screen in points
 40      SY = 191                                : REM The height of the screen in points    
 
 41 REM  Load the map image to HGR page 2
@@ -27,11 +29,11 @@
 
 100 REM Draw horizontal graph Lines 
 110 REM in the film these are drawn first, in a ping-pong pattern
-110     HPLOT 0,MID TO SX,MID
+110     & HPLOT 0,MID TO SX,MID
 120     MID = PMID(1)
-130     HPLOT SX,MID TO 0,MID
+130     & HPLOT SX,MID TO 0,MID
 140     MID = PMID(2)
-150     HPLOT 0,MID TO SX,MID
+150     & HPLOT 0,MID TO SX,MID
 160     MID = PMID(0)
 
 200 REM Setup Plots
@@ -47,9 +49,9 @@
 315     I = 1
 320 REM LOOP START
 330     READ C,D                                : REM read data for second point                                              
-340     HPLOT A,(B + MID)                       : REM Plot start point
-350     HPLOT C,(D + MID)                       : REM Plot end point
-360     HPLOT A,(B + MID) TO C,(D + MID)        : REM Draw line
+340     & HPLOT A,(B + MID)                       : REM Plot start point
+350     & HPLOT C,(D + MID)                       : REM Plot end point
+360     & HPLOT A,(B + MID) TO C,(D + MID)        : REM Draw line
 370     A = C : B = D                           : REM Set the end point of this line to be the start point for the next line
 380     I = I + 2                               : REM count the number of points we have plotted so far
 390     IF I = PCOUNT(P) THEN GOTO 500          : REM If we have plotted the data for this graph, get ready to plot the next graph   
@@ -67,7 +69,7 @@
 620     TX = 0 : TY = 183                       : REM The start position for the drawing of the shapes
 630     FOR V = 0 TO 37 STEP 1                  : REM Loop through the character data and draw the characters  
 640     READ C                                  : REM Get the shape table index of the character to be drawn from data
-650     DRAW C AT TX,TY                         : REM Draw the character from the shape table 
+650     & DRAW C AT TX,TY                         : REM Draw the character from the shape table 
 660     TX = TX + 7                             : REM Advance the cursor position    
 670     NEXT V
 
@@ -75,28 +77,17 @@
 701 REM This should be drawn beforehand on HGR Screen 2 so it can be switched to instantly as in the movie - loaded from a .pic with baked in text.
 702 REM Circles should be shape table animations
 705     GET KB$                                 : REM Wait for user to press a key on the keyboard
-710     CALL -3086                              : REM Clear screen to black as in movie
-711     POKE 230,64                             : REM Set plotting page to HGR 2    
+710     CALL -3086                              : REM Clear screen to black as in movie    
 715     POKE 49237,1                            : REM Display graphics page 2
-720     HPLOT 0,54 TO SX,54                     : REM Draw a placeholder line to test flashing anim
 
 750 REM Map screen animations
-760 REM    SCALE = 1: ROT = 0
-761 REM    HPLOT 0,54 TO SX,54                     : REM Draw a placeholder line to test flashing anim
-765 REM    POKE 49236,0                            : REM Display graphics page 1
-
-805 REM  Load the circles shape table
-806 REM     SH = 25000 : D$ = CHR$ (4)              : REM SH = Start position in memory
-807 REM     PRINT D$;"BLOAD DEMO SHAPES,A";SH     : REM Load the font shape table into memory
-808 REM     POKE 232,SH - INT (SH / 256) * 256      : REM Set the flags for the start of the shape table in memory   
-809 REM     POKE 233, INT (SH / 256)                : REM Set the flags for the end of the shape table in memory  
-
-867 REM ANIMATE
-868     SCALE = 4: ROT = 0 : HCOLOR = 3                      : REM Shape table drawing setup
-870     XDRAW 81 AT 50,50                        : REM Draw the character from the shape table 
-880     FOR T = 0 TO 50 STEP 1 : NEXT T        : REM Delay for animation  
-890     GOTO 867
-
+760     SCALE = 1: ROT = 0
+761     & HPLOT 0,54 TO SX,54                     : REM Draw a placeholder line to test flashing anim
+765     POKE 49236,0                            : REM Display graphics page 1
+767 REM
+770     & XDRAW 80 AT 50,50                       : REM Draw the character from the shape table 
+780     FOR T = 0 TO 400 STEP 1 : NEXT T        : REM Delay for animation  
+800     GOTO 767
 
 900     END
 
