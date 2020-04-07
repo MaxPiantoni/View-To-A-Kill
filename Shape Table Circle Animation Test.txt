@@ -8,15 +8,15 @@
 55 SX = 279 : SY = 191                              : REM The screen dimensions
 
 60 REM  Draw Cross 
-65      HPLOT 0,96 TO SX,96
-70      HPLOT 140,0 TO 140,SY   
+65 REM  HPLOT 0,96 TO SX,96
+70 REM  HPLOT 140,0 TO 140,SY   
 
 80  REM Draw and animate shapes
 90  FOR U = 0 TO 10000 STEP 1                       : REM Loop circle animations for a while
-95       TS = 3                                     : REM Which shape from the shape table are we drawing?   
+95       TS = 4                                     : REM Which shape from the shape table are we drawing?   
 96       X = 140 : Y = 70                           : REM The position at whice we'll plot the circles
 100      FOR C = 1 TO 3 STEP 1                      : REM Loop for drawing the 3 different circles
-102         FOR F = 0 TO 5 STEP 1                   : REM Loop for flashing each circle a number of times         
+102         FOR F = 0 TO 7 STEP 1                   : REM Loop for flashing each circle a number of times         
 103            RT = 0                               : REM Initial Rotation  
 105             SCALE = 1: ROT = RT                : REM Shape table drawing setup
 110             XDRAW TS AT X,Y                   : REM Draw first quadrant at x,y co-ords
@@ -25,7 +25,7 @@
 125                     ROT = RT                    : REM Rotate the shape by 90 degrees
 130                     XDRAW TS                         
 140                 NEXT I
-150         FOR D = 0 TO 25 STEP 1 : NEXT D         : REM Delay for animation
+150         FOR D = 0 TO 10 STEP 1 : NEXT D         : REM Delay for animation
 151         NEXT F
 155     SC = SC - 1
 156     TS = TS - 1
