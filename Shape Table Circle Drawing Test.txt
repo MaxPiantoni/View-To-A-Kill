@@ -11,9 +11,9 @@
 65 REM  HPLOT 0,96 TO SX,96
 70 REM  HPLOT 140,0 TO 140,SY   
 
-85  TS = 3                                     : REM Which shape from the shape table are we drawing?   
+85  TS = 5                                     : REM Which shape from the shape table are we drawing?   
 90  X = 140: Y = 80
-100 FOR C = 1 TO 3 STEP 1
+100 FOR C = 1 TO TS STEP 1
 105     SCALE = 1: ROT = 0                      : REM Shape table drawing setup
 110     XDRAW TS AT X,Y                      : REM Draw first quadrant at x,y co-ords
 115         FOR I = 1 TO 3 STEP 1           : REM Loop for drawing other three quadrants    
@@ -22,6 +22,6 @@
 130             XDRAW TS                         
 140         NEXT I
 150     TS = TS - 1
-152     Y = Y + 5
+152     Y = Y + 7
 155     RT = 0
 160 NEXT C
