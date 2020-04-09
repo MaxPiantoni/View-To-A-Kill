@@ -8,8 +8,8 @@
 55 SX = 279 : SY = 191                              : REM The screen dimensions
 
 60 REM  Draw Cross 
-65  HPLOT 0,96 TO SX,96
-70  HPLOT 140,0 TO 140,SY   
+65 REM  HPLOT 0,96 TO SX,96
+70 REM  HPLOT 140,0 TO 140,SY   
 
 80  REM Draw and animate the circles
 90  FOR U = 0 TO 10000 STEP 1                       : REM Loop circle animations for a while

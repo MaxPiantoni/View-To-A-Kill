@@ -1,5 +1,8 @@
-01 REM STACEY'S COMPUTER FROM A VIEW TO A KILL
-02 REM BY MAX PIANTONI
+01  LOC = 25476 + 1 : IF PEEK (103) + PEEK (104) * 256 <> LOC THEN POKE LOC - 1,0: POKE 103,LOC - INT(LOC/256) *256: POKE 104,INT (LOC / 256): PRINT CHR$(4);"RUN VTAK"
+02  REM LINE 01 LOADS PROGRAM AFTER HGR PAGE 2 AT 24576 ($6000) IN MEMORY. THERE IS MORE ROOM THERE
+
+08 REM STACEY'S COMPUTER FROM A VIEW TO A KILL
+09 REM BY MAX PIANTONI
 
 10  REM Screen Setup
 15      HOME
@@ -10,20 +13,24 @@
 40      SY = 191                                : REM The height of the screen in points    
 
 41 REM  Load the map image to HGR page 2
-42      PRINT CHR$(4)"BLOADTESTINVERT.PIC,A$4000"     : REM Load map to HGR page 2 ($A2000 loads to page 1)
+42      PRINT CHR$(4)"BLOAD TESTINVERT.PIC,A$4000"     : REM Load map to HGR page 2 ($A2000 loads to page 1)
 
 44 REM  Load the font shape table from the floppy. The font used is ']SMALL STANDARD' from the Beagle Bros. Apple Mechanic.     
-45      SH = 25000 : D$ = CHR$ (4)              : REM SH = Start position in memory
-46      PRINT D$;"BLOAD STANDARD FONT,A";SH     : REM Load the font shape table into memory
-47      POKE 232,SH - INT (SH / 256) * 256      : REM Set the flags for the start of the shape table in memory   
-48      POKE 233, INT (SH / 256)                : REM Set the flags for the end of the shape table in memory  
+45      FS = 2048 : D$ = CHR$ (4)               : REM FS = Start position in memory
+46      PRINT D$;"BLOAD STANDARD FONT,A";FS     : REM Load the font shape table into memory
+47      POKE 232,FS - INT (FS / 256) * 256      : REM Set the flags for the start of the shape table in memory   
+48      POKE 233, INT (FS / 256)                : REM Set the flags for the end of the shape table in memory  
 
-50  REM Graph Setup
-55      DIM PMID(2)                             : REM An array to store the position of the line for each plot
-60      PMID(0) = 31
-65      PMID(1) = 96
-70      PMID(2) = 160
-75      MID = PMID(0)                            : REM The y midpoint of the curent plot
+60 REM  Load the circle shape table into memory
+65      CS = 4000                               : REM Set the position in the memory to load the circle shape table
+70      PRINT D$;"BLOAD CIRCLE.SHAPES,A";CS     : REM Load the font shape table into memory    
+
+90  REM Graph Setup
+91      DIM PMID(2)                             : REM An array to store the position of the line for each plot
+92      PMID(0) = 31
+93      PMID(1) = 96
+94      PMID(2) = 160
+95      MID = PMID(0)                            : REM The y midpoint of the curent plot
 
 100 REM Draw horizontal graph Lines 
 110 REM in the film these are drawn first, in a ping-pong pattern
@@ -78,27 +85,35 @@
 710     CALL -3086                              : REM Clear screen to black as in movie
 711     POKE 230,64                             : REM Set plotting page to HGR 2    
 715     POKE 49237,1                            : REM Display graphics page 2
-720     HPLOT 0,54 TO SX,54                     : REM Draw a placeholder line to test flashing anim
 
-750 REM Map screen animations
-760 REM    SCALE = 1: ROT = 0
-761 REM    HPLOT 0,54 TO SX,54                     : REM Draw a placeholder line to test flashing anim
-765 REM    POKE 49236,0                            : REM Display graphics page 1
+800 REM  Set the 
+805      POKE 232, CS - INT (CS / 256) * 256    : REM Set the flags for the start of the circles shape table in memory   
+815      POKE 233, INT (CS / 256)               : REM Set the flags for the end of the circles shape table in memory  
 
-805 REM  Load the circles shape table
-806 REM     SH = 25000 : D$ = CHR$ (4)              : REM SH = Start position in memory
-807 REM     PRINT D$;"BLOAD DEMO SHAPES,A";SH     : REM Load the font shape table into memory
-808 REM     POKE 232,SH - INT (SH / 256) * 256      : REM Set the flags for the start of the shape table in memory   
-809 REM     POKE 233, INT (SH / 256)                : REM Set the flags for the end of the shape table in memory  
-
-867 REM ANIMATE
-868     SCALE = 4: ROT = 0 : HCOLOR = 3                      : REM Shape table drawing setup
-870     XDRAW 81 AT 50,50                        : REM Draw the character from the shape table 
-880     FOR T = 0 TO 50 STEP 1 : NEXT T        : REM Delay for animation  
-890     GOTO 867
-
-
-900     END
+900 REM Draw and animate the circles
+905      FOR U = 0 TO 10000 STEP 1                      : REM Loop circle animations for a while
+910         TS = 4                                      : REM Which shape from the shape table are we drawing?   
+915         X = 165 : Y = 40                            : REM The centre position of the circles
+920         FOR C = 3 TO 1 STEP -1                      : REM Loop for drawing the 3 different circles
+925             FOR F = 0 TO 7 STEP 1                   : REM Loop for flashing each circle a number of times         
+930             RT = 0                                  : REM Initial Rotation of the circle quadrant 
+935                 SCALE = 1: ROT = RT                 : REM Shape table drawing setup
+940                 YOFFSET = 7 + (7 * C)               : REM Calculate the Y position at which to start plotting the circle     
+945                 XDRAW TS AT X,Y - YOFFSET           : REM Draw first quadrant around x,y co-ords (with y offset)
+950                     FOR I = 1 TO 3 STEP 1           : REM Loop for drawing other three quadrants    
+955                         RT = RT + 16                : REM Add 90 degrees to cumulative rotation
+960                         ROT = RT                    : REM Rotate the shape by 90 degrees
+965                         XDRAW TS                         
+970                     NEXT I    
+975             IF F <> 0 THEN HCOLOR = 0               : REM If it's not the first flash the centrepoint is drawn black so it's invisible
+980             HPLOT X,Y                               : REM Draw a dot a the centre point             
+981             HCOLOR = 3                              : REM Reset drawing color so circle is always drawn white
+982             FOR D = 0 TO 10 STEP 1 : NEXT D         : REM Delay for animation
+983             NEXT F
+984         TS = TS - 1                                 : REM set the circle to be drawn to the previous shape in the shape table
+986         NEXT C
+987         FOR D = 0 TO 50 STEP 1 : NEXT D             : REM Delay for animation
+989     NEXT U                                          : REM Loop animation
 
 1000 REM Data for plot line 1 - a series of x,y positions
 1001    DATA    30,0,  35,2,   40,0,   45,-2,  55,0,   56,-25, 58,25,  59,-20
