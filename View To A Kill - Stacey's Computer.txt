@@ -13,7 +13,7 @@
 40      SY = 191                                : REM The height of the screen in points    
 
 41 REM  Load the map image to HGR page 2
-42      PRINT CHR$(4)"BLOAD TESTINVERT.PIC,A$4000"     : REM Load map to HGR page 2 ($A2000 loads to page 1)
+42      PRINT CHR$(4)"BLOAD MAP5.PIC,A$4000"     : REM Load map to HGR page 2 ($A2000 loads to page 1)
 
 44 REM  Load the font shape table from the floppy. The font used is ']SMALL STANDARD' from the Beagle Bros. Apple Mechanic.     
 45      FS = 2048 : D$ = CHR$ (4)               : REM FS = Start position in memory
