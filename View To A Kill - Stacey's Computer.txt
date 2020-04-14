@@ -11,93 +11,78 @@
 21      D$ = CHR$ (4)        
 
 24 REM  Load the map image to HGR page 2
-25      PRINT D$;"BLOAD MAP.PIC,A$4000"         : REM Load map to HGR page 2 (A$2000 loads to page 1)
+25      PRINT D$;"BLOAD MAP.PIC,A$4000"                 : REM Load map to HGR page 2 (A$2000 loads to page 1)
 
 30 REM  Load the font shape table from the floppy. The font used is ']SMALL STANDARD' from the Beagle Bros. Apple Mechanic.     
-32      FS = 2048                               : REM FS = Start position in memory for the font shape table
-34      PRINT D$;"BLOAD STANDARD.FONT,A";FS     : REM Load the font shape table into memory
-36      POKE 232,FS - INT (FS / 256) * 256      : REM Set the flags for the position of the font shape table in memory   
-38      POKE 233, INT (FS / 256)                : REM Set the flags for the position of the font shape table in memory  
+32      FS = 2048                                       : REM FS = Start position in memory for the font shape table
+34      PRINT D$;"BLOAD STANDARD.FONT,A";FS             : REM Load the font shape table into memory
+36      POKE 232,FS - INT (FS / 256) * 256              : REM Set the flags for the position of the font shape table in memory   
+38      POKE 233, INT (FS / 256)                        : REM Set the flags for the position of the font shape table in memory  
 
 40 REM  Load the circle shape table into memory
-45      CS = 4000                               : REM Set the position in the memory to load the circle shape table
-50      PRINT D$;"BLOAD CIRCLE.SHAPES,A";CS     : REM Load the font shape table into memory    
+45      CS = 4000                                       : REM Set the position in the memory to load the circle shape table
+50      PRINT D$;"BLOAD CIRCLE.SHAPES,A";CS             : REM Load the font shape table into memory    
 
 
 
 60  REM GRAPH SCREEN
 
 61  REM Graphics Setup
-65      HGR                                     : REM Transition to Hi-Res Graphics
-70      POKE 49234,0                            : REM Hide the text window
-75      HCOLOR = 3                              : REM Set the color we will draw in (white)
-80      SX = 279 : SY = 191                     : REM The width and height of the screen in points
+65      HGR                                             : REM Transition to Hi-Res Graphics
+70      POKE 49234,0                                    : REM Hide the text window
+75      HCOLOR = 3                                      : REM Set the color we will draw in (white)
+80      SX = 279 : SY = 191                             : REM The width and height of the screen in points
 
-90  REM Plotting Screen Graph Setup
-91      DIM PMID(2)                             : REM An array to store the vertical position of the line for each plot
-92      PMID(0) = 31
-93      PMID(1) = 96
-94      PMID(2) = 160
-95      MID = PMID(0)                           : REM The y midpoint of the curent plot
-
-100 REM Draw horizontal graph Lines 
-110 REM in the film these are drawn first, in a ping-pong pattern
-110     HPLOT 0,MID TO SX,MID
-120     MID = PMID(1)
-130     HPLOT SX,MID TO 0,MID
-140     MID = PMID(2)
-150     HPLOT 0,MID TO SX,MID
-160     MID = PMID(0)
+100 REM Draw horizontal graph Lines - in the film these are drawn first, in a ping-pong pattern
+105     GAP = 31                                        : REM The Y position for the midpoint of the first graph  
+110     YP = GAP                                        : REM Used to calculate the distance between the graphs on screen
+115     HPLOT 0,YP TO SX,YP
+120     YP = YP + (GAP * 2) 
+125     HPLOT SX,YP TO 0,YP
+130     YP = YP + (GAP * 2) 
+135     HPLOT 0,YP TO SX,YP
 
 200 REM Setup Plots
-210     P = 0                                   : REM The current line of the plot
-220     DIM PCOUNT(2)                           : REM The amount of data in each graph
-221     PCOUNT(0) = 63
-222     PCOUNT(1) = 63
-223     PCOUNT(2) = 63
+220     DIM PCOUNT(2) 
+225     PCOUNT(0) = 32 :  PCOUNT(1) = 32  : PCOUNT(2) = 32         : REM The number of sets of x,y coords in each graph
+230                                                                : REM  (each x,y set counts as 1. So this is half of the number of data points per plot) 
 
 300 REM Read and plot data on the graph lines
-301     I = 0                                   : REM Keep track of how many points we have plotted     
-310     READ A,B                                : REM Read data for first point
-315     I = 1
-320 REM LOOP START
-330     READ C,D                                : REM read data for second point                                              
-340     HPLOT A,(B + MID)                       : REM Plot start point
-350     HPLOT C,(D + MID)                       : REM Plot end point
-360     HPLOT A,(B + MID) TO C,(D + MID)        : REM Draw line
-370     A = C : B = D                           : REM Set the end point of this line to be the start point for the next line
-380     I = I + 2                               : REM count the number of points we have plotted so far
-390     IF I = PCOUNT(P) THEN GOTO 500          : REM If we have plotted the data for this graph, get ready to plot the next graph   
-410     GOTO 320                                : Plot the next point in this graph
-
-500 REM Logic for advancing to the next plot
-510     IF P > 1 GOTO 600                       : REM If this is the last of the three graphs, stop plotting
-520     IF I = PCOUNT(P) THEN MID = PMID(P + 1) : REM Advance the midpoint to that of the next graph
-530     IF I = PCOUNT(P) THEN P = P + 1         : REM Advance to the next graph
-540     IF I = PCOUNT(P - 1) GOTO 300           : Rem plot the next graph
+305     YP = 31                                         : REM Set the midpoint for the first graph
+310     FOR I = 0 TO 2                                  : REM Plot each graph
+315         READ A,B                                    : REM Read data for first point              
+320         FOR J = 1 TO (PCOUNT(I) - 1)                : REM Plot each point
+325             READ C,D                                : REM read data for second point                                              
+330             HPLOT A,(B + YP)                        : REM Plot start point
+335             HPLOT C,(D + YP)                        : REM Plot end point
+340             HPLOT A,(B + YP) TO C,(D + YP)          : REM Draw line
+345             A = C : B = D                           : REM Set the end point of this line to be the start point for the next line
+350         NEXT J
+355      YP = YP + (GAP * 2)                            : REM Set the midpoint for the next graph    
+360      NEXT I                                     
 
 600 REM Draw the line of text below the graph
 601 REM characters are: d = 9km   m = 2.5:
-610     SCALE = 1: ROT = 0                      : REM Shape table drawing setup
-620     TX = 0 : TY = 183                       : REM The start position for the drawing of the shapes
-630     FOR V = 0 TO 37 STEP 1                  : REM Loop through the character data and draw the characters  
-640     READ C                                  : REM Get the shape table index of the character to be drawn from data
-650     DRAW C AT TX,TY                         : REM Draw the character from the shape table 
-660     TX = TX + 7                             : REM Advance the cursor position    
-670     NEXT V
+610    SCALE = 1: ROT = 0                               : REM Shape table drawing setup
+620    TX = 0 : TY = 183                                : REM The start position for the drawing of the shapes
+630    FOR V = 0 TO 37 STEP 1                           : REM Loop through the character data and draw the characters  
+640        READ C                                       : REM Get the shape table index of the character to be drawn from data
+650        DRAW C AT TX,TY                              : REM Draw the character from the shape table 
+660        TX = TX + 7                                  : REM Advance the cursor position    
+670    NEXT V
 
 
 
 699 REM MAP SCREEN
 
 700 REM Transition to the map page
-705     GET KB$                                 : REM Wait for user to press a key on the keyboard
-710     CALL -3086                              : REM Clear screen to black as in movie
-715     POKE 230,64 : POKE 49237,1              : REM Set plotting page to high res graphics page 2 & display High res graphics page 2    
+705     GET KB$                                         : REM Wait for user to press a key on the keyboard
+710     CALL -3086                                      : REM Clear screen to black as in movie
+715     POKE 230,64 : POKE 49237,1                      : REM Set plotting page to high res graphics page 2 & display High res graphics page 2    
 
 800 REM  Set the flags for the position of the font shape table in memory 
-805      POKE 232, CS - INT (CS / 256) * 256    : REM Set the flags for the position of the font shape table in memory
-815      POKE 233, INT (CS / 256)               : REM Set the flags for the position of the font shape table in memory 
+805      POKE 232, CS - INT (CS / 256) * 256            : REM Set the flags for the position of the font shape table in memory
+815      POKE 233, INT (CS / 256)                       : REM Set the flags for the position of the font shape table in memory 
 
 900 REM Draw and animate the circles
 905      FOR U = 0 TO 10000 STEP 1                      : REM Loop circle animations for a while
@@ -126,8 +111,6 @@
 
 
 
-999 REM DATA 
-
 1000 REM Data for plot line 1 - a series of x,y positions
 1001    DATA    30,0,  35,2,   40,0,   45,-2,  55,0,   56,-25, 58,25,  59,-20
 1002    DATA    60,21, 62,-15, 64,15,  66,-10, 69,10,  72,-8,  74,8,   78,-5
@@ -153,3 +136,4 @@
 4001    DATA    69,1,30,1,26,76,78 
 4002    DATA    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 4003    DATA    78,1,30,1,19,15,22
+
