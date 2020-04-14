@@ -1,36 +1,44 @@
 01  LOC = 25476 + 1 : IF PEEK (103) + PEEK (104) * 256 <> LOC THEN POKE LOC - 1,0: POKE 103,LOC - INT(LOC/256) *256: POKE 104,INT (LOC / 256): PRINT CHR$(4);"RUN VTAK"
-02  REM LINE 01 LOADS PROGRAM AFTER HGR PAGE 2 AT 24576 ($6000) IN MEMORY. THERE IS MORE ROOM THERE
+05  REM LINE 01 LOADS PROGRAM AFTER HGR PAGE 2 AT 24576 ($6000) IN MEMORY. THERE IS MORE ROOM THERE
 
-08 REM STACEY'S COMPUTER FROM A VIEW TO A KILL
-09 REM BY MAX PIANTONI
+10 REM STACEY'S COMPUTER FROM A VIEW TO A KILL, RECREATED BY MAX PIANTONI WWW.MAXPIANTONI.COM
 
-10  REM Screen Setup
-15      HOME
-20      HGR                                     : REM Hi-Res Graphics
-25      POKE 49234,0                            : REM switch to full screen graphics (hide text window)
-30      HCOLOR = 3                              : REM Set the color we will draw in
-35      SX = 279                                : REM The width of the screen in points
-40      SY = 191                                : REM The height of the screen in points    
+11 REM  TITLE TEXT
+15      HOME : VTAB 2: PRINT " STACEY'S COMPUTER" : PRINT " (FROM A VIEW TO A KILL)" 
+16      VTAB 5 : : PRINT " A SOFTWARE FORGERY" : PRINT " BY MAX PIANTONI" : VTAB 8 : PRINT " WWW.MAXPIANTONI.COM"   
 
-41 REM  Load the map image to HGR page 2
-42      PRINT CHR$(4)"BLOAD MAP.PIC,A$4000"     : REM Load map to HGR page 2 ($A2000 loads to page 1)
+20 REM  LOAD ASSETS INTO MEMORY
+21      D$ = CHR$ (4)        
 
-44 REM  Load the font shape table from the floppy. The font used is ']SMALL STANDARD' from the Beagle Bros. Apple Mechanic.     
-45      FS = 2048 : D$ = CHR$ (4)               : REM FS = Start position in memory
-46      PRINT D$;"BLOAD STANDARD.FONT,A";FS     : REM Load the font shape table into memory
-47      POKE 232,FS - INT (FS / 256) * 256      : REM Set the flags for the start of the shape table in memory   
-48      POKE 233, INT (FS / 256)                : REM Set the flags for the end of the shape table in memory  
+24 REM  Load the map image to HGR page 2
+25      PRINT D$;"BLOAD MAP.PIC,A$4000"         : REM Load map to HGR page 2 (A$2000 loads to page 1)
 
-60 REM  Load the circle shape table into memory
-65      CS = 4000                               : REM Set the position in the memory to load the circle shape table
-70      PRINT D$;"BLOAD CIRCLE.SHAPES,A";CS     : REM Load the font shape table into memory    
+30 REM  Load the font shape table from the floppy. The font used is ']SMALL STANDARD' from the Beagle Bros. Apple Mechanic.     
+32      FS = 2048                               : REM FS = Start position in memory for the font shape table
+34      PRINT D$;"BLOAD STANDARD.FONT,A";FS     : REM Load the font shape table into memory
+36      POKE 232,FS - INT (FS / 256) * 256      : REM Set the flags for the position of the font shape table in memory   
+38      POKE 233, INT (FS / 256)                : REM Set the flags for the position of the font shape table in memory  
 
-90  REM Graph Setup
-91      DIM PMID(2)                             : REM An array to store the position of the line for each plot
+40 REM  Load the circle shape table into memory
+45      CS = 4000                               : REM Set the position in the memory to load the circle shape table
+50      PRINT D$;"BLOAD CIRCLE.SHAPES,A";CS     : REM Load the font shape table into memory    
+
+
+
+60  REM GRAPH SCREEN
+
+61  REM Graphics Setup
+65      HGR                                     : REM Transition to Hi-Res Graphics
+70      POKE 49234,0                            : REM Hide the text window
+75      HCOLOR = 3                              : REM Set the color we will draw in (white)
+80      SX = 279 : SY = 191                     : REM The width and height of the screen in points
+
+90  REM Plotting Screen Graph Setup
+91      DIM PMID(2)                             : REM An array to store the vertical position of the line for each plot
 92      PMID(0) = 31
 93      PMID(1) = 96
 94      PMID(2) = 160
-95      MID = PMID(0)                            : REM The y midpoint of the curent plot
+95      MID = PMID(0)                           : REM The y midpoint of the curent plot
 
 100 REM Draw horizontal graph Lines 
 110 REM in the film these are drawn first, in a ping-pong pattern
@@ -78,17 +86,18 @@
 660     TX = TX + 7                             : REM Advance the cursor position    
 670     NEXT V
 
+
+
+699 REM MAP SCREEN
+
 700 REM Transition to the map page
-701 REM This should be drawn beforehand on HGR Screen 2 so it can be switched to instantly as in the movie - loaded from a .pic with baked in text.
-702 REM Circles should be shape table animations
 705     GET KB$                                 : REM Wait for user to press a key on the keyboard
 710     CALL -3086                              : REM Clear screen to black as in movie
-711     POKE 230,64                             : REM Set plotting page to HGR 2    
-715     POKE 49237,1                            : REM Display graphics page 2
+715     POKE 230,64 : POKE 49237,1              : REM Set plotting page to high res graphics page 2 & display High res graphics page 2    
 
-800 REM  Set the 
-805      POKE 232, CS - INT (CS / 256) * 256    : REM Set the flags for the start of the circles shape table in memory   
-815      POKE 233, INT (CS / 256)               : REM Set the flags for the end of the circles shape table in memory  
+800 REM  Set the flags for the position of the font shape table in memory 
+805      POKE 232, CS - INT (CS / 256) * 256    : REM Set the flags for the position of the font shape table in memory
+815      POKE 233, INT (CS / 256)               : REM Set the flags for the position of the font shape table in memory 
 
 900 REM Draw and animate the circles
 905      FOR U = 0 TO 10000 STEP 1                      : REM Loop circle animations for a while
@@ -114,6 +123,10 @@
 986         NEXT C
 987         FOR D = 0 TO 50 STEP 1 : NEXT D             : REM Delay for animation
 989     NEXT U                                          : REM Loop animation
+
+
+
+999 REM DATA 
 
 1000 REM Data for plot line 1 - a series of x,y positions
 1001    DATA    30,0,  35,2,   40,0,   45,-2,  55,0,   56,-25, 58,25,  59,-20
