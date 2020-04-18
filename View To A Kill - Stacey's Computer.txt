@@ -3,7 +3,9 @@
 
 10 REM STACEY'S COMPUTER FROM A VIEW TO A KILL, RECREATED BY MAX PIANTONI WWW.MAXPIANTONI.COM
 
-11 REM  TITLE TEXT
+11 REM SETUP & LOADING ----------------------------------------
+
+12 REM  TITLE TEXT
 15      HOME : VTAB 2: PRINT " STACEY'S COMPUTER" : PRINT " (FROM A VIEW TO A KILL)" 
 16      VTAB 5 : : PRINT " A SOFTWARE FORGERY" : PRINT " BY MAX PIANTONI" : VTAB 8 : PRINT " WWW.MAXPIANTONI.COM"   
 
@@ -25,7 +27,7 @@
 
 
 
-60  REM GRAPH SCREEN
+60  REM GRAPH SCREEN ----------------------------------------
 
 61  REM Graphics Setup
 65      HGR                                             : REM Transition to Hi-Res Graphics
@@ -44,7 +46,7 @@
 
 200 REM Setup Plots
 220     DIM PCOUNT(2) 
-225     PCOUNT(0) = 32 :  PCOUNT(1) = 32  : PCOUNT(2) = 32         : REM The number of sets of x,y coords in each graph
+225     PCOUNT(0) = 32 :  PCOUNT(1) = 31  : PCOUNT(2) = 32         : REM The number of sets of x,y coords in each graph
 230                                                                : REM  (each x,y set counts as 1. So this is half of the number of data points per plot) 
 
 300 REM Read and plot data on the graph lines
@@ -74,7 +76,7 @@
 
 
 
-699 REM MAP SCREEN
+699 REM MAP SCREEN ----------------------------------------
 
 700 REM Transition to the map page
 705     GET KB$                                         : REM Wait for user to press a key on the keyboard
@@ -112,19 +114,20 @@
 
 
 
+999 REM GRAPH DATA ----------------------------------------
+
 1000 REM Data for plot line 1 - a series of x,y positions
-1001    DATA    30,0,  35,2,   40,0,   45,-2,  55,0,   56,-25, 58,25,  59,-20
-1002    DATA    60,21, 62,-15, 64,15,  66,-10, 69,10,  72,-8,  74,8,   78,-5
-1003    DATA    80,2,  90,-2
-1004    DATA    92,0,  94,25,  95,-25, 96,22,  98,-18, 98,-18, 100,10, 103,-8
-1005    DATA    105,5, 108,-5, 118,3,  120,0,  140,3,  155,0    
+1001    DATA    30,0,       35,2,       40,0,       45,-2,      55,0,       56,-25,     58,25,      59,-20
+1002    DATA    60,21,      62,-15,     64,15,      66,-10,     69,10,      72,-8,      74,8,       78,-5
+1003    DATA    80,2,       90,-2
+1004    DATA    92,0,       94,25,      95,-25,     96,22,      98,-18,     98,-18,     100,10,     103,-8
+1005    DATA    105,5,      108,-5,     118,3,      120,0,      140,3,      155,0    
 
 2000 REM Data for plot line 2 - a series of x,y positions   
-2001    DATA    30,0,  35,2,   40,0,   45,-2,  55,0,   56,-25, 58,25,  59,-20
-2002    DATA    60,21, 62,-15, 64,15,  66,-10, 69,10,  72,-8,  74,8,   78,-5
-2003    DATA    80,2,  90,-2
-2004    DATA    92,0,  94,25,  95,-25, 96,22,  98,-18, 98,-18, 100,10, 103,-8
-2005    DATA    105,5, 108,-5, 118,3,  120,0,  140,3,  155,0 
+2001    DATA    0,0,        9,-1,       18,2,       30,-1,      39,3,       47,-2,      62,0,       64,25      
+2002    DATA    68,-23,     68,19,      71,-10,     73,9,       75,-1,      78,3,       85,-1,      91,3
+2003    DATA    94,0,       94,-21,     95,21,      96,-21,     97,23,      99,-13,     100,18,     102,-11          
+2004    DATA    103,8,      106,-3,     108,3,      110,-2,     114,3,      129,-3,     140,0
 
 3000 REM Data for plot line 3 - a series of x,y positions   
 3001    DATA    30,0,  35,2,   40,0,   45,-2,  55,0,   56,-25, 58,25,  59,-20
