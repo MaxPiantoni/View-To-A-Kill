@@ -46,7 +46,7 @@
 
 200 REM Setup Plots
 220     DIM PCOUNT(2) 
-225     PCOUNT(0) = 32 :  PCOUNT(1) = 31  : PCOUNT(2) = 32         : REM The number of sets of x,y coords in each graph
+225     PCOUNT(0) = 32 :  PCOUNT(1) = 31  : PCOUNT(2) = 31         : REM The number of sets of x,y coords in each graph
 230                                                                : REM  (each x,y set counts as 1. So this is half of the number of data points per plot) 
 
 300 REM Read and plot data on the graph lines
@@ -83,9 +83,9 @@
 710     CALL -3086                                      : REM Clear screen to black as in movie
 715     POKE 230,64 : POKE 49237,1                      : REM Set plotting page to high res graphics page 2 & display High res graphics page 2    
 
-800 REM  Set the flags for the position of the font shape table in memory 
-805      POKE 232, CS - INT (CS / 256) * 256            : REM Set the flags for the position of the font shape table in memory
-815      POKE 233, INT (CS / 256)                       : REM Set the flags for the position of the font shape table in memory 
+800 REM  Set shape table flags to point at the position of the circle shape table in memory 
+805      POKE 232, CS - INT (CS / 256) * 256            : REM Set the flags for the position of the circle shape table in memory
+815      POKE 233, INT (CS / 256)                       : REM Set the flags for the position of the circle shape table in memory 
 
 900 REM Draw and animate the circles
 905      FOR U = 0 TO 10000 STEP 1                      : REM Loop circle animations for a while
@@ -117,21 +117,31 @@
 999 REM GRAPH DATA ----------------------------------------
 
 1000 REM Data for plot line 1 - a series of x,y positions
-1001    DATA    30,0,       35,2,       40,0,       45,-2,      55,0,       56,-25,     58,25,      59,-20
-1002    DATA    60,21,      62,-15,     64,15,      66,-10,     69,10,      72,-8,      74,8,       78,-5
-1003    DATA    80,2,       90,-2
-1004    DATA    92,0,       94,25,      95,-25,     96,22,      98,-18,     98,-18,     100,10,     103,-8
-1005    DATA    105,5,      108,-5,     118,3,      120,0,      140,3,      155,0    
+1005    DATA    30,0,       35,2,       40,0,       45,-2      
+1010    DATA    55,0,       56,-25,     58,25,      59,-20
+1015    DATA    60,21,      62,-15,     64,15,      66,-10     
+1020    DATA    69,10,      72,-8,      74,8,       78,-5  
+1025    DATA    80,2,       90,-2,      92,0,       94,25      
+1030    DATA    95,-25,     96,22,      98,-18,     98,-18     
+1035    DATA    100,10,     103,-8,     105,5,      108,-5     
+1040    DATA    118,3,      120,0,      140,3,      155,0    
 
 2000 REM Data for plot line 2 - a series of x,y positions   
-2001    DATA    0,0,        9,-1,       18,2,       30,-1,      39,3,       47,-2,      62,0,       64,25      
-2002    DATA    68,-23,     68,19,      71,-10,     73,9,       75,-1,      78,3,       85,-1,      91,3
-2003    DATA    94,0,       94,-21,     95,21,      96,-21,     97,23,      99,-13,     100,18,     102,-11          
-2004    DATA    103,8,      106,-3,     108,3,      110,-2,     114,3,      129,-3,     140,0
+2005    DATA    0,0,        9,-1,       18,2,       30,-1      
+2010    DATA    39,3,       47,-2,      62,0,       64,25      
+2015    DATA    68,-23,     68,19,      71,-10,     73,9       
+2020    DATA    75,-1,      78,3,       85,-1,      91,3
+2025    DATA    94,0,       94,-21,     95,21,      96,-21     
+2030    DATA    97,23,      99,-13,     100,18,     102,-11          
+2035    DATA    103,8,      106,-3,     108,3,      110,-2     
+2040    DATA    114,3,      129,-3,     140,0
 
 3000 REM Data for plot line 3 - a series of x,y positions   
-3001    DATA    30,0,  35,2,   40,0,   45,-2,  55,0,   56,-25, 58,25,  59,-20
-3002    DATA    60,21, 62,-15, 64,15,  66,-10, 69,10,  72,-8,  74,8,   78,-5
-3003    DATA    80,2,  90,-2
-3004    DATA    92,0,  94,25,  95,-25, 96,22,  98,-18, 98,-18, 100,10, 103,-8
-3005    DATA    105,5, 108,-5, 118,3,  120,0,  140,3,  155,0 
+3005    DATA    0,0,        12,-1,      25,1,       34,-3     
+3010    DATA    42,1,       54,1,       63,-2,      77,0                  
+3015    DATA    83,-27,     83,25,      85,-17,     87,13      
+3020    DATA    88,-9,      91,7,       93,-3,      97,2       
+3025    DATA    105,4,      109,0,      109,-23,    111,22     
+3030    DATA    110,-24,    112,24,     114,-15,    115,15
+3035    DATA    117,-8,     119,5,      121,-2,     123,1      
+3040    DATA    128,-1,     131,2,      140,-1    
