@@ -62,14 +62,15 @@
 360      NEXT I                                     
 
 600 REM Draw the line of text below the graph
-601 REM characters are: d = 9km   m = 2.5:
+605    S$ = "d = 9km                        m = 2.5"    : REM The string we will write to the screen                     
 610    SCALE = 1: ROT = 0                               : REM Shape table drawing setup
-620    TX = 0 : TY = 183                                : REM The start position for the drawing of the shapes
-630    FOR V = 0 TO 37 STEP 1                           : REM Loop through the character data and draw the characters  
-640        READ C                                       : REM Get the shape table index of the character to be drawn from data
-650        DRAW C AT TX,TY                              : REM Draw the character from the shape table 
-660        TX = TX + 7                                  : REM Advance the cursor position    
-670    NEXT V
+615    TX = 0 : TY = 183                                : REM The start position for the drawing of the shapes
+620    FOR V = 1 TO LEN(S$)                             : REM Loop through the string
+625         SX$ = MID$(S$,V)                            : REM Get the next character from the string
+630         C = (ASC(SX$) - 31)                         : REM Use the ascii value of the character and offset to deterimine the shape table index of the character to be drawn
+635         DRAW C AT TX,TY                             : REM Draw the character from the shape table 
+640         TX = TX + 7                                 : REM Advance the cursor position    
+650    NEXT V                   
 
 
 
@@ -131,9 +132,3 @@
 3003    DATA    80,2,  90,-2
 3004    DATA    92,0,  94,25,  95,-25, 96,22,  98,-18, 98,-18, 100,10, 103,-8
 3005    DATA    105,5, 108,-5, 118,3,  120,0,  140,3,  155,0 
-
-4000 REM Data for text at bottom of graph screen (d = 9km m = 2.5)
-4001    DATA    69,1,30,1,26,76,78 
-4002    DATA    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
-4003    DATA    78,1,30,1,19,15,22
-
