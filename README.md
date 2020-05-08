@@ -1,4 +1,4 @@
-# Stacey's Computer from A View To A Kill. (A software forgery).
+# Stacey's Computer from A View To A Kill. (A Software Forgery).
 A recreation of Stacey's Apple IIc program from A View To A Kill. Written in Applesoft Basic for the Apple II. By [Max Piantoni](https://www.maxpiantoni.com) 
 
 **[Click here for an in depth video about this project on YouTube](https://youtu.be/YGVfwEEjRfs)**
