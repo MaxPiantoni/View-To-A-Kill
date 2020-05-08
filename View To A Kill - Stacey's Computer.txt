@@ -1,39 +1,43 @@
 01  LOC = 25476 + 1 : IF PEEK (103) + PEEK (104) * 256 <> LOC THEN POKE LOC - 1,0: POKE 103,LOC - INT(LOC/256) *256: POKE 104,INT (LOC / 256): PRINT CHR$(4);"RUN VTAK"
-05  REM LINE 01 LOADS PROGRAM AFTER HGR PAGE 2 AT 24576 ($6000) IN MEMORY. THERE IS MORE ROOM THERE
+02  REM LINE 01 LOADS PROGRAM AFTER HGR PAGE 2 AT 24576 ($6000) IN MEMORY. THERE IS MORE ROOM THERE
 
-10 REM STACEY'S COMPUTER FROM A VIEW TO A KILL, RECREATED BY MAX PIANTONI WWW.MAXPIANTONI.COM
+03 REM -------------------------------------------
+04 REM - STACEY'S COMPUTER FROM A VIEW TO A KILL -
+05 REM -    A SOFTWARE FORGERY BY MAX PIANTONI   -
+06 REM -            WWW.MAXPIANTONI.COM          -
+07 REM -------------------------------------------
 
-11 REM SETUP & LOADING ----------------------------------------
+
+
+10 REM - LOADING ----------------------
 
 12 REM  TITLE TEXT
 15      HOME : VTAB 2: PRINT " STACEY'S COMPUTER" : PRINT " (FROM A VIEW TO A KILL)" 
 16      VTAB 5 : : PRINT " A SOFTWARE FORGERY" : PRINT " BY MAX PIANTONI" : VTAB 8 : PRINT " WWW.MAXPIANTONI.COM"   
 
 20 REM  LOAD ASSETS INTO MEMORY
-21      D$ = CHR$ (4)        
-
-24 REM  Load the map image to HGR page 2
-25      PRINT D$;"BLOAD MAP.PIC,A$4000"                 : REM Load map to HGR page 2 (A$2000 loads to page 1)
-
-30 REM  Load the font shape table from the floppy. The font used is ']SMALL STANDARD' from the Beagle Bros. Apple Mechanic.     
-32      FS = 2048                                       : REM FS = Start position in memory for the font shape table
-34      PRINT D$;"BLOAD STANDARD.FONT,A";FS             : REM Load the font shape table into memory
-36      POKE 232,FS - INT (FS / 256) * 256              : REM Set the flags for the position of the font shape table in memory   
-38      POKE 233, INT (FS / 256)                        : REM Set the flags for the position of the font shape table in memory  
-
-40 REM  Load the circle shape table into memory
-45      CS = 4000                                       : REM Set the position in the memory to load the circle shape table
+25      D$ = CHR$ (4)        
+30      PRINT D$;"BLOAD MAP.PIC,A$4000"                 : REM Load map to HGR page 2 (A$2000 loads to page 1)
+35      FS = 2048                                       : REM FS = Start position in memory for the font shape table. We'll need to point to this location when using the font.
+40      PRINT D$;"BLOAD STANDARD.FONT,A";FS             : REM Load the font shape table into memory
+45      CS = 4000                                       : REM Set the position in the memory to load the circle shape table. We'll need to point to this location when using the circles.
 50      PRINT D$;"BLOAD CIRCLE.SHAPES,A";CS             : REM Load the font shape table into memory    
 
 
 
-60  REM GRAPH SCREEN ----------------------------------------
+60  REM - GRAPH SCREEN ----------------
 
-61  REM Graphics Setup
-65      HGR                                             : REM Transition to Hi-Res Graphics
-70      POKE 49234,0                                    : REM Hide the text window
-75      HCOLOR = 3                                      : REM Set the color we will draw in (white)
-80      SX = 279 : SY = 191                             : REM The width and height of the screen in points
+62 REM Setup Plots
+64     DIM PCOUNT(2) 
+66     PCOUNT(0) = 32 :  PCOUNT(1) = 31  : PCOUNT(2) = 31         : REM The number of sets of x,y coords in each graph (each x,y set counts as 1. So this is half of the number of data points per plot) 
+
+70  REM  - LOOP BACK TO THIS LINE WHEN RETURNING TO THE GRAPH SCREEN FROM THE MAP SCREEN -
+
+80  REM Graphics Setup
+82      HGR                                             : REM Transition to Hi-Res Graphics
+84      POKE 49234,0                                    : REM Hide the text window
+86      HCOLOR = 3                                      : REM Set the color we will draw in (white)
+88      SX = 279 : SY = 191                             : REM The width and height of the screen in points
 
 100 REM Draw horizontal graph Lines - in the film these are drawn first, in a ping-pong pattern
 105     GAP = 31                                        : REM The Y position for the midpoint of the first graph  
@@ -43,13 +47,9 @@
 125     HPLOT SX,YP TO 0,YP
 130     YP = YP + (GAP * 2) 
 135     HPLOT 0,YP TO SX,YP
-
-200 REM Setup Plots
-220     DIM PCOUNT(2) 
-225     PCOUNT(0) = 32 :  PCOUNT(1) = 31  : PCOUNT(2) = 31         : REM The number of sets of x,y coords in each graph
-230                                                                : REM  (each x,y set counts as 1. So this is half of the number of data points per plot) 
-
+                                                           
 300 REM Read and plot data on the graph lines
+301     RESTORE                                         : REM Reset data list to the beginning
 305     YP = 31                                         : REM Set the midpoint for the first graph
 310     FOR I = 0 TO 2                                  : REM Plot each graph
 315         READ A,B                                    : REM Read data for first point              
@@ -62,6 +62,9 @@
 350         NEXT J
 355      YP = YP + (GAP * 2)                            : REM Set the midpoint for the next graph    
 360      NEXT I                                     
+
+400      POKE 232,FS - INT (FS / 256) * 256              : REM Set the flags for the position of the font shape table in memory   
+405      POKE 233, INT (FS / 256)                        : REM Set the flags for the position of the font shape table in memory  
 
 600 REM Draw the line of text below the graph
 605    S$ = "d = 9km                        m = 2.5"    : REM The string we will write to the screen                     
@@ -76,10 +79,12 @@
 
 
 
-699 REM MAP SCREEN ----------------------------------------
+699 REM - MAP SCREEN ------------------
 
-700 REM Transition to the map page
-705     GET KB$                                         : REM Wait for user to press a key on the keyboard
+700 REM Transition to the map page on keyboard input
+704     POKE 49168,0                                    : REM Clear the keyboard so we can detect input
+705     IF PEEK(49152) < 128 GOTO 705                   : REM Wait for user to press a key on the keyboard (49152 contains character + 128)
+706     POKE 49168,0                                    : REM Clear the keyboard so we can detect input again later
 710     CALL -3086                                      : REM Clear screen to black as in movie
 715     POKE 230,64 : POKE 49237,1                      : REM Set plotting page to high res graphics page 2 & display High res graphics page 2    
 
@@ -89,6 +94,7 @@
 
 900 REM Draw and animate the circles
 905      FOR U = 0 TO 2 STEP 1                          : REM Loop circle animations (iterator is reset before loop for endless animation)
+906      POKE 49168,0                                   : REM Clear the keyboard in case the user has struck multiple keys
 910         TS = 4                                      : REM Which shape from the shape table are we drawing?   
 915         X = 149 : Y = 34                            : REM The centre position of the circles
 920         FOR C = 3 TO 1 STEP -1                      : REM Loop for drawing the 3 different circles
@@ -108,14 +114,15 @@
 982             FOR D = 0 TO 10 STEP 1 : NEXT D         : REM Delay for animation
 983             NEXT F
 984         TS = TS - 1                                 : REM set the circle to be drawn to the previous shape in the shape table
+985         IF U > 0 THEN IF PEEK(49152) > 128 GOTO 70  : REM If the user has pressed a key, loop back to map screen setup. (49152 contains character + 128). Ignores keypresses on the first iteration (presumed accidental).
 986         NEXT C
 987         FOR D = 0 TO 50 STEP 1 : NEXT D             : REM Delay for animation
-988     U = 0                                           : REM Reset the iterator so it loops forever
+988     U = 1                                           : REM Reset the iterator so it loops forever
 989     NEXT U                                          : REM Loop animation
 
 
 
-999 REM GRAPH DATA ----------------------------------------
+999 REM GRAPH DATA --------------------
 
 1000 REM Data for plot line 1 - a series of x,y positions
 1005    DATA    30,0,       35,2,       40,0,       45,-2      
