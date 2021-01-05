@@ -11,6 +11,8 @@ A recreation of Stacey's Apple IIc program from the 1985 James Bond film A View 
 ## Links & Coverage
 Much to my delight, this project has reached others who sit within this Venn Diagram, those who love Apple IIs and James Bonds...
 
+- [Daring Fireball](https://daringfireball.net/linked/2021/01/02/piantoni-bond-apple-iic)
+- [Podcast: Retro Computing Roundtable Episode 214: As Seen On TV](http://rcrpodcast.com/episodes/2020/6/4/rcr-episode-214-as-seen-on-tv.html)
 - [A lovely writeup by Blake Patterson on Byte Cellar](https://bytecellar.com/2020/04/29/apple-c-scene-from-80s-bond-film-a-view-to-a-kill-perfectly-re-created-with-applesoft-basic/)
 - [Some great comments over at Hacker News](https://news.ycombinator.com/item?id=23027207)
 - [There's also some great comments on the YouTube video about the project](https://youtu.be/YGVfwEEjRfs)
